@@ -12,77 +12,7 @@
 body { font-family: "Consolas", "Lucida Console", Monaco, monospace; background-color:#161616; font-size:12px; color:#fff; background-color:#000; }
 </style>
 </head>
-<script id='VFeed' type='x-shader/x-vertex'>
-precision mediump float;
-attribute vec3 position;
 
-uniform float scale;
-uniform mat4 model;
-uniform vec2 res; //new prop
-varying vec2 pos;
-uniform float zoom;
-
-void main() {
-		
-	 	pos=((((position.xy)*scale))/res)*2.0);//+translation.xy
-		gl_Position = model * vec4(pos*zoom,0.0,1.0);
-	}
-</script>
-<script id='FFeed' type='x-shader/x-fragment'>
-precision mediump float;
-
-float random(vec2 st) {
-    return fract(sin(dot(st.xy,
-                         vec2(12.9898,78.233)))
-                 * 43758.5453123);
-}
-
-// 2D Noise based on Morgan McGuire @morgan3d
-// https://www.shadertoy.com/view/4dS3Wd
-float noise(vec2 st) {
-    vec2 i = floor(st);
-    vec2 f = fract(st);
-
-    // Four corners in 2D of a tile
-    float a = random(i);
-    float b = random(i + vec2(1.0, 0.0));
-    float c = random(i + vec2(0.0, 1.0));
-    float d = random(i + vec2(1.0, 1.0));
-
-    // Smooth Interpolation
-	precision mediump float;
-	attribute vec3 position,normal;
-	uniform vec3 translation;
-	uniform float scale;
-	uniform mat4 model;
-	uniform vec2 res;
-	varying vec2 pos;
-	uniform float zoom;
-
-	void main() {
-			
-		 	pos=((((position.xy)*scale))/res)*2.0);//+translation.xy
-			gl_Position = model * vec4(pos*zoom,0.0,1.0);
-		}
-    // Cubic Hermine Curve.  Same as SmoothStep()
-    vec2 u = f*f*f*(f*(f*6.-15.)+10.);
-    // u = smoothstep(0.,1.,f);
-
-    // Mix 4 coorners porcentages
-    return mix(a, b, u.x) +
-            (c - a)* u.y * (1.0 - u.x) +
-            (d - b) * u.x * u.y;
-}
-
-
-uniform sampler2D texture;
-uniform float t;
-varying vec2 uv;
-void main () {
-	vec3 t=texture2D(texture, uv).rgb;
-  gl_FragColor = vec4(t, (t.r<0.1 && t.g<0.1 && t.b<0.1)?0.0:1.0);
-}
-</script>
 <script id='VShade' type='x-shader/x-vertex'> //diff must be in prpops
 	precision mediump float;
 	attribute vec3 position,normal;
@@ -95,7 +25,7 @@ void main () {
 
 	void main() {
 			
-		 	pos=((((position.xy)*scale))/res)*2.0);//+translation.xy
+		 	pos=(((((position.xy)*scale))/res)*2.0)+translation.xy;
 			gl_Position = model * vec4(pos*zoom,0.0,1.0);
 		}
 </script>
